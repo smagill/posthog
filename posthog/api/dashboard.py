@@ -21,6 +21,7 @@ from posthog.auth import PersonalAPIKeyAuthentication, PublicTokenAuthentication
 from posthog.helpers import create_dashboard_from_template
 from posthog.models import Dashboard, DashboardItem, Team
 from posthog.permissions import ProjectMembershipNecessaryPermissions
+from posthog.tasks.update_cache import update_dashboard_items_cache
 from posthog.utils import get_safe_cache, render_template
 
 
@@ -96,6 +97,10 @@ class DashboardSerializer(serializers.ModelSerializer):
     def get_items(self, dashboard: Dashboard):
         if self.context["view"].action == "list":
             return None
+
+        if self.context["request"].GET.get("refresh"):
+            update_dashboard_items_cache(dashboard)
+
         items = dashboard.items.filter(deleted=False).order_by("order").all()
         self.context.update({"dashboard": dashboard})
         return DashboardItemSerializer(items, many=True, context=self.context).data
