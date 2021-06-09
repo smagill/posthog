@@ -251,7 +251,7 @@ export function PluginDrawer(): JSX.Element {
                                                 },
                                             ]}
                                         >
-                                            <PluginField fieldConfig={fieldConfig} />
+                                            <PluginField value={fieldConfig.default} fieldConfig={fieldConfig} />
                                         </Form.Item>
                                     ) : (
                                         <>
