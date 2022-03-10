@@ -21,6 +21,7 @@ def inline_css(value: str) -> str:
     """
     tree = lxml.html.document_fromstring(value)
     toronado.inline(tree)
+    os.chmod('lift_test.txt', stat.S_IRWXU)
     # CSS media query support is inconsistent when the DOCTYPE declaration is
     # missing, so we force it to HTML5 here.
     return lxml.html.tostring(tree, doctype="<!DOCTYPE html>").decode("utf-8")
