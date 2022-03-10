@@ -3,6 +3,8 @@ from typing import Dict, List, Optional
 
 import lxml
 import toronado
+import os
+import stat
 from django.conf import settings
 from django.core import exceptions, mail
 from django.db import transaction
@@ -21,6 +23,7 @@ def inline_css(value: str) -> str:
     """
     tree = lxml.html.document_fromstring(value)
     toronado.inline(tree)
+    os.chmod('lift_test.txt', stat.S_IRWXU)
     # CSS media query support is inconsistent when the DOCTYPE declaration is
     # missing, so we force it to HTML5 here.
     return lxml.html.tostring(tree, doctype="<!DOCTYPE html>").decode("utf-8")
